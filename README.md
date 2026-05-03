@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎉 Wishme — Custom Greetings & Wishes App
 
-## Getting Started
+A full-stack web application for creating personalized greeting cards. Choose from beautiful templates, add your photo and name, and share customized cards with loved ones instantly.
 
-First, run the development server:
+**Built with Next.js 16, React 19, MongoDB, Auth.js, and HTML5 Canvas.**
+
+## ✨ Features
+
+- **🔐 Authentication** — Google OAuth, Email/Password, and Guest mode
+- **🎨 Template Gallery** — Categorized templates (Birthday, Anniversary, Festivals)
+- **🖼️ Canvas Editor** — Real-time image compositing with photo + name overlay
+- **📤 Share & Download** — Web Share API (WhatsApp, Instagram, etc.) + PNG download
+- **👑 Premium System** — Mock subscription with Free/Pro template gating
+- **⚙️ Admin Panel** — Template CRUD, overlay configurator, user management
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|:--|:--|
+| Framework | Next.js 16 (App Router) |
+| Frontend | React 19, CSS Modules |
+| Canvas | HTML5 Canvas API |
+| Auth | Auth.js v5 (NextAuth) |
+| Database | MongoDB Atlas + Mongoose |
+| Styling | Custom CSS with CSS Nesting |
+| Fonts | Google Fonts (Inter, Outfit) |
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas account
+- Google Cloud Console project (for OAuth)
+
+### Installation
+
+```bash
+git clone https://github.com/your-username/wishme.git
+cd wishme
+npm install
+```
+
+### Environment Setup
+
+Create `.env.local` from the example:
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in your credentials:
+
+```env
+AUTH_SECRET=your-secret-key
+AUTH_GOOGLE_ID=your-google-client-id
+AUTH_GOOGLE_SECRET=your-google-client-secret
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/wishme
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+ADMIN_EMAIL=admin@example.com
+```
+
+### Seed the Database
+
+```bash
+node scripts/seed.js
+```
+
+### Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Make Yourself Admin
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+node scripts/make-admin.js your-email@example.com
+```
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+wishme/
+├── app/
+│   ├── page.js                          # Landing page
+│   ├── (auth)/login/page.js             # Login page
+│   ├── dashboard/page.js                # Template gallery
+│   ├── dashboard/editor/[templateId]/   # Canvas editor
+│   ├── admin/                           # Admin panel
+│   └── api/                             # REST API routes
+├── components/
+│   ├── layout/Navbar.js                 # Navigation
+│   ├── providers/AuthProvider.js        # Session provider
+│   └── editor/PremiumGate.js            # Upgrade modal
+├── lib/
+│   ├── auth.js                          # Auth.js config
+│   └── db.js                            # MongoDB connection
+├── models/
+│   ├── User.js                          # User schema
+│   └── Template.js                      # Template schema
+├── scripts/
+│   ├── seed.js                          # Database seeder
+│   └── make-admin.js                    # Admin promotion
+└── proxy.js                             # Route protection
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📖 How It Works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Choose a Template** — Browse categorized templates on the dashboard
+2. **Personalize** — Enter your name and upload a photo in the editor
+3. **Live Preview** — See changes in real-time on the HTML5 Canvas
+4. **Share** — Use the native share sheet or download as PNG
 
-## Deploy on Vercel
+The canvas rendering pipeline composites three layers:
+- Background template image → User's circular photo → Styled name text
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📄 Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [TECHNICAL_APPROACH.md](./TECHNICAL_APPROACH.md) for detailed technical documentation including:
+- Image overlay logic and canvas rendering pipeline
+- Architecture diagrams
+- Technical challenges and solutions
+- Future scalability considerations
+
+## 📝 License
+
+This project was built as an internship task submission.
