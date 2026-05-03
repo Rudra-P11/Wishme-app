@@ -12,6 +12,10 @@ const CATEGORIES = [
   { id: 'birthday', label: '🎂 Birthday', emoji: '🎂' },
   { id: 'anniversary', label: '💍 Anniversary', emoji: '💍' },
   { id: 'festival', label: '🎆 Festivals', emoji: '🎆' },
+  { id: 'love', label: '❤️ Love', emoji: '❤️' },
+  { id: 'quote', label: '💬 Quotes', emoji: '💬' },
+  { id: 'shayari', label: '🌹 Shayari', emoji: '🌹' },
+  { id: 'joke', label: '😂 Jokes', emoji: '😂' },
   { id: 'general', label: '🙏 General', emoji: '🙏' },
 ];
 

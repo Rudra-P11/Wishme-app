@@ -108,6 +108,30 @@ export default function HomePage() {
             <p>Diwali, Eid, Christmas & more</p>
           </Link>
 
+          <Link href="/dashboard?category=love" className={`${styles.categoryCard} ${styles.love}`}>
+            <span className={styles.categoryEmoji}>❤️</span>
+            <h3>Love</h3>
+            <p>Express your love & affection</p>
+          </Link>
+
+          <Link href="/dashboard?category=quote" className={`${styles.categoryCard} ${styles.quote}`}>
+            <span className={styles.categoryEmoji}>💬</span>
+            <h3>Quotes</h3>
+            <p>Inspirational & motivational</p>
+          </Link>
+
+          <Link href="/dashboard?category=shayari" className={`${styles.categoryCard} ${styles.shayari}`}>
+            <span className={styles.categoryEmoji}>🌹</span>
+            <h3>Shayari</h3>
+            <p>Beautiful Hindi & Urdu poetry</p>
+          </Link>
+
+          <Link href="/dashboard?category=joke" className={`${styles.categoryCard} ${styles.joke}`}>
+            <span className={styles.categoryEmoji}>😂</span>
+            <h3>Jokes</h3>
+            <p>Funny cards to make them smile</p>
+          </Link>
+
           <Link href="/dashboard?category=general" className={`${styles.categoryCard} ${styles.general}`}>
             <span className={styles.categoryEmoji}>🙏</span>
             <h3>General Wishes</h3>

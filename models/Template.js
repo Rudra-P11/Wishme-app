@@ -10,7 +10,7 @@ const TemplateSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, 'Please provide a category'],
-      enum: ['birthday', 'anniversary', 'festival', 'general'],
+      enum: ['birthday', 'anniversary', 'festival', 'general', 'joke', 'shayari', 'quote', 'love'],
     },
     imageUrl: {
       type: String,
