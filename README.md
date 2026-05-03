@@ -2,7 +2,7 @@
 
 > A full-stack web application for creating personalized greeting cards. Choose from beautiful templates, add your photo and name, and share customized cards with loved ones — all from your browser.
 
-**Live Demo:** _[Coming soon — Vercel deployment pending]_
+**Live Demo:** https://wishme-app.vercel.app/
 
 ---
 
