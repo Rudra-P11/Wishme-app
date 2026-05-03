@@ -390,19 +390,7 @@ Admins set these positions visually using the **click-to-place configurator** in
 
 ---
 
-## 📄 Documentation
-
-For a deep dive into the technical implementation, see:
-
-**[TECHNICAL_APPROACH.md](./TECHNICAL_APPROACH.md)** — Covers:
-- Image overlay algorithm and canvas rendering pipeline
-- Architecture diagrams and data models
-- 5 technical challenges faced and how I solved them
-- Future scalability considerations
-
----
-
-## 🗺️ Roadmap
+## 🗺️ Future Roadmap
 
 - [x] Authentication (Google + Email + Guest)
 - [x] Template gallery with category filtering
