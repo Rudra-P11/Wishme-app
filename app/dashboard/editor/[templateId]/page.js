@@ -167,9 +167,9 @@ export default function EditorPage({ params }) {
 
     // 2. Draw Photo
     if (photoImageRef.current) {
-      const px = (config.photoPosition?.x || 540) + customPhoto.offsetX;
-      const py = (config.photoPosition?.y || 700) + customPhoto.offsetY;
-      const baseSize = config.photoSize || 150;
+      const px = parseFloat(config.photoPosition?.x || 540) + customPhoto.offsetX;
+      const py = parseFloat(config.photoPosition?.y || 700) + customPhoto.offsetY;
+      const baseSize = parseFloat(config.photoSize || 150);
       const size = baseSize * customPhoto.sizeScale;
       const halfSize = size / 2;
 
@@ -187,16 +187,20 @@ export default function EditorPage({ params }) {
       ctx.restore();
 
       ctx.beginPath();
-      ctx.arc(px, py, halfSize + 2, 0, Math.PI * 2);
+      if (config.photoShape === 'square') {
+        ctx.rect(px - halfSize, py - halfSize, size, size);
+      } else {
+        ctx.arc(px, py, halfSize + 2, 0, Math.PI * 2);
+      }
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
       ctx.lineWidth = 3;
       ctx.stroke();
     }
 
     // 3. Draw Text
-    const nx = (config.namePosition?.x || 540) + customText.offsetX;
-    const ny = (config.namePosition?.y || 900) + customText.offsetY;
-    const baseFontSize = config.nameFontSize || 36;
+    const nx = parseFloat(config.namePosition?.x || 540) + customText.offsetX;
+    const ny = parseFloat(config.namePosition?.y || 900) + customText.offsetY;
+    const baseFontSize = parseFloat(config.nameFontSize || 36);
     const fontSize = baseFontSize * customText.fontSizeScale;
     const fontFamily = customText.fontFamily || config.nameFont || 'Outfit';
     const color = customText.color || config.nameColor || '#ffffff';
@@ -481,13 +485,13 @@ export default function EditorPage({ params }) {
                       className={styles.colorPicker}
                       title="Choose text color"
                     />
-                    <button 
+                    <button type="button"
                       className={`${styles.effectBtn} ${customText.shadow ? styles.active : ''}`}
                       onClick={() => setCustomText(prev => ({ ...prev, shadow: !prev.shadow, glow: false }))}
                     >
                       Shadow
                     </button>
-                    <button 
+                    <button type="button"
                       className={`${styles.effectBtn} ${customText.glow ? styles.active : ''}`}
                       onClick={() => setCustomText(prev => ({ ...prev, glow: !prev.glow, shadow: false }))}
                     >
@@ -499,12 +503,12 @@ export default function EditorPage({ params }) {
                 <div className={styles.customizerRow}>
                   <label>Position Nudge</label>
                   <div className={styles.dpad}>
-                    <button onClick={() => setCustomText(prev => ({ ...prev, offsetY: prev.offsetY - 10 }))}>↑</button>
+                    <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetY: prev.offsetY - 10 }))}>↑</button>
                     <div>
-                      <button onClick={() => setCustomText(prev => ({ ...prev, offsetX: prev.offsetX - 10 }))}>←</button>
-                      <button onClick={() => setCustomText(prev => ({ ...prev, offsetX: prev.offsetX + 10 }))}>→</button>
+                      <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetX: prev.offsetX - 10 }))}>←</button>
+                      <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetX: prev.offsetX + 10 }))}>→</button>
                     </div>
-                    <button onClick={() => setCustomText(prev => ({ ...prev, offsetY: prev.offsetY + 10 }))}>↓</button>
+                    <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetY: prev.offsetY + 10 }))}>↓</button>
                   </div>
                 </div>
               </div>
@@ -566,12 +570,12 @@ export default function EditorPage({ params }) {
                     <div className={styles.customizerRow}>
                       <label>Position Nudge</label>
                       <div className={styles.dpad}>
-                        <button onClick={() => setCustomPhoto(prev => ({ ...prev, offsetY: prev.offsetY - 10 }))}>↑</button>
+                        <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetY: prev.offsetY - 10 }))}>↑</button>
                         <div>
-                          <button onClick={() => setCustomPhoto(prev => ({ ...prev, offsetX: prev.offsetX - 10 }))}>←</button>
-                          <button onClick={() => setCustomPhoto(prev => ({ ...prev, offsetX: prev.offsetX + 10 }))}>→</button>
+                          <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetX: prev.offsetX - 10 }))}>←</button>
+                          <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetX: prev.offsetX + 10 }))}>→</button>
                         </div>
-                        <button onClick={() => setCustomPhoto(prev => ({ ...prev, offsetY: prev.offsetY + 10 }))}>↓</button>
+                        <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetY: prev.offsetY + 10 }))}>↓</button>
                       </div>
                     </div>
                   </div>
