@@ -30,6 +30,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Comic+Neue:wght@700&family=Outfit:wght@700&family=Playfair+Display:wght@700&family=Tiro+Devanagari+Hindi:ital@0;1&family=Mukta:wght@700&display=swap" rel="stylesheet" />
+      </head>
       <body>
         <AuthProvider>
           <Navbar />
