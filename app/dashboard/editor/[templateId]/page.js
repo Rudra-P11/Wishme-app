@@ -213,13 +213,20 @@ export default function EditorPage({ params }) {
 
     if (customText.glow) {
       ctx.shadowColor = color;
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = 25;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
     } else if (customText.shadow) {
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-      ctx.shadowBlur = 8;
-      ctx.shadowOffsetY = 2;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+      ctx.shadowBlur = 12;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
     }
     ctx.fillText(userName, nx, ny);
+    // Draw twice for intense glow
+    if (customText.glow) {
+      ctx.fillText(userName, nx, ny);
+    }
     ctx.restore();
 
     // 4. Draw Particles
@@ -255,6 +262,46 @@ export default function EditorPage({ params }) {
           particlesRef.current[i] = { ...p, x: Math.random() * 1080, y: -10, tiltAngle: 0 };
         }
       }
+    } else if (animationEffect === 'hearts') {
+      ctx.fillStyle = 'rgba(255, 105, 180, 0.8)';
+      for (let i = 0; i < particlesRef.current.length; i++) {
+        const p = particlesRef.current[i];
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.scale(p.r / 15, p.r / 15);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(0, -3, -5, -15, -15, -15);
+        ctx.bezierCurveTo(-30, -15, -30, 7.5, -30, 7.5);
+        ctx.bezierCurveTo(-30, 20, -10, 31, 0, 40);
+        ctx.bezierCurveTo(10, 31, 30, 20, 30, 7.5);
+        ctx.bezierCurveTo(30, 7.5, 30, -15, 15, -15);
+        ctx.bezierCurveTo(5, -15, 0, -3, 0, 0);
+        ctx.fill();
+        ctx.restore();
+
+        p.y += (Math.cos(p.tiltAngle) + 1 + p.r / 2) / 2;
+        p.x += Math.sin(p.tiltAngle) * 2;
+        if (p.x > 1080 + 30 || p.x < -30 || p.y > 1080) {
+          particlesRef.current[i] = { ...p, x: Math.random() * 1080, y: -40 };
+        }
+      }
+    } else if (animationEffect === 'rain') {
+      ctx.strokeStyle = 'rgba(174, 194, 224, 0.7)';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      for (let i = 0; i < particlesRef.current.length; i++) {
+        const p = particlesRef.current[i];
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x + p.d, p.y + p.r * 2);
+        p.y += p.r * 2;
+        p.x += p.d;
+        if (p.y > 1080) {
+          particlesRef.current[i] = { ...p, x: Math.random() * 1080, y: -20 };
+        }
+      }
+      ctx.stroke();
     }
 
     // 5. Draw Watermark
@@ -587,17 +634,12 @@ export default function EditorPage({ params }) {
           {/* Effects editor */}
           <div className={styles.controlCard}>
             <h3>Animation Effect</h3>
-            <div className={styles.effectsGroup}>
-              {['none', 'snow', 'confetti'].map(effect => (
-                <button
-                  key={effect}
-                  className={`${styles.uploadBtn} ${animationEffect === effect ? styles.active : ''}`}
-                  onClick={() => setAnimationEffect(effect)}
-                  style={{ textTransform: 'capitalize' }}
-                >
-                  {effect}
-                </button>
-              ))}
+            <div className={styles.animationBtns}>
+              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'none' ? styles.active : ''}`} onClick={() => setAnimationEffect('none')}>None</button>
+              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'snow' ? styles.active : ''}`} onClick={() => setAnimationEffect('snow')}>❄️ Snow</button>
+              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'confetti' ? styles.active : ''}`} onClick={() => setAnimationEffect('confetti')}>🎉 Confetti</button>
+              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'hearts' ? styles.active : ''}`} onClick={() => setAnimationEffect('hearts')}>❤️ Hearts</button>
+              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'rain' ? styles.active : ''}`} onClick={() => setAnimationEffect('rain')}>🌧️ Rain</button>
             </div>
           </div>
 
