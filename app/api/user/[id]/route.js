@@ -6,7 +6,7 @@ import Template from '@/models/Template';
 export async function GET(req, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
 
     const user = await User.findById(id).select('name image isPremium isCreator followers following').lean();
     
@@ -28,6 +28,7 @@ export async function GET(req, { params }) {
         isCreator: user.isCreator,
         followerCount: user.followers ? user.followers.length : 0,
         followingCount: user.following ? user.following.length : 0,
+        following: user.following ? user.following.map(id => id.toString()) : [],
       },
       templates
     });

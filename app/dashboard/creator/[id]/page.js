@@ -107,40 +107,69 @@ function CreatorProfileContent({ id }) {
       <div className={styles.dashboardHeader} style={{ textAlign: 'center', paddingBottom: '2rem', borderBottom: '1px solid var(--border-subtle)', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
           {profile.image ? (
-            <img src={profile.image} alt={profile.name} style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--border-default)' }} />
+            <img 
+              src={profile.image} 
+              alt={profile.name} 
+              style={{ 
+                width: '120px', 
+                height: '120px', 
+                borderRadius: '50%', 
+                objectFit: 'cover', 
+                border: profile.isCreator ? '4px solid #3b82f6' : profile.isPremium ? '4px solid #f59e0b' : '4px solid var(--border-default)',
+                padding: '4px',
+                background: 'var(--bg-primary)'
+              }} 
+            />
           ) : (
-            <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', color: 'white' }}>
-              {profile.name?.charAt(0).toUpperCase()}
+            <div 
+              style={{ 
+                width: '120px', 
+                height: '120px', 
+                borderRadius: '50%', 
+                background: 'var(--bg-secondary)', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                fontSize: '3rem', 
+                color: 'var(--text-secondary)',
+                border: profile.isCreator ? '4px solid #3b82f6' : profile.isPremium ? '4px solid #f59e0b' : '4px solid var(--border-default)',
+                padding: '4px'
+              }}
+            >
+              <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
+                {profile.name?.charAt(0).toUpperCase()}
+              </div>
             </div>
           )}
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
-            <h1 style={{ margin: 0, fontSize: '2rem' }}>{profile.name}</h1>
-            {profile.isPremium && <span className={styles.premiumBadge} style={{ position: 'relative' }}>PRO</span>}
-            {profile.isCreator && <span className={styles.freeBadge} style={{ position: 'relative', background: '#3b82f6', color: 'white' }}>Creator</span>}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'center' }}>
+            <h1 style={{ margin: 0, fontSize: '2.5rem', fontWeight: '800', letterSpacing: '-0.5px' }}>{profile.name}</h1>
           </div>
           
-          <div style={{ display: 'flex', gap: '1.5rem', color: 'var(--text-secondary)' }}>
-            <div><strong>{profile.followerCount}</strong> Followers</div>
-            <div><strong>{profile.followingCount}</strong> Following</div>
-            <div><strong>{templates.length}</strong> Templates</div>
+          <div style={{ display: 'flex', gap: '2rem', color: 'var(--text-secondary)', marginTop: '0.5rem', fontSize: '1.1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><strong style={{ color: 'var(--text-primary)', fontSize: '1.5rem' }}>{profile.followerCount}</strong> <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Followers</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><strong style={{ color: 'var(--text-primary)', fontSize: '1.5rem' }}>{profile.followingCount}</strong> <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Following</span></div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><strong style={{ color: 'var(--text-primary)', fontSize: '1.5rem' }}>{templates.length}</strong> <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Templates</span></div>
           </div>
 
           {!isOwnProfile && (
             <button 
               onClick={handleFollowToggle}
               disabled={followLoading}
+              onMouseEnter={(e) => { if(isFollowing) e.target.innerText = 'Unfollow' }}
+              onMouseLeave={(e) => { if(isFollowing) e.target.innerText = 'Following' }}
               style={{
-                marginTop: '1rem',
-                padding: '8px 24px',
-                borderRadius: '20px',
+                marginTop: '1.5rem',
+                padding: '10px 32px',
+                borderRadius: '8px',
                 border: isFollowing ? '1px solid var(--border-strong)' : 'none',
                 background: isFollowing ? 'transparent' : 'var(--text-primary)',
                 color: isFollowing ? 'var(--text-primary)' : 'var(--bg-primary)',
-                fontWeight: '600',
+                fontWeight: '700',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                opacity: followLoading ? 0.7 : 1
+                opacity: followLoading ? 0.7 : 1,
+                minWidth: '140px'
               }}
             >
               {followLoading ? '...' : isFollowing ? 'Following' : 'Follow'}
@@ -149,9 +178,10 @@ function CreatorProfileContent({ id }) {
         </div>
       </div>
 
-      <h2 style={{ marginBottom: '1.5rem' }}>Templates by {profile.name}</h2>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+        <h2 style={{ marginBottom: '2rem' }}>Templates by {profile.name}</h2>
 
-      <div className={styles.templateGrid}>
+        <div className={styles.templateGrid} style={{ textAlign: 'left' }}>
         {templates.length === 0 ? (
           <div className={styles.emptyState}>
             <h3>No templates yet</h3>
@@ -178,6 +208,7 @@ function CreatorProfileContent({ id }) {
             </div>
           ))
         )}
+      </div>
       </div>
 
       {showPremiumGate && (

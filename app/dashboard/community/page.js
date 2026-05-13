@@ -150,8 +150,8 @@ function CommunityContent() {
 
                   {/* Creator badge overlay */}
                   <div style={{ position: 'absolute', bottom: '8px', right: '8px', zIndex: 10 }}>
-                    <Link href={`/dashboard/creator/${template.creatorId}`} onClick={(e) => e.stopPropagation()} style={{ background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', fontSize: '10px', color: 'white', backdropFilter: 'blur(4px)', textDecoration: 'none' }}>
-                      By @{template.creatorName || 'unknown'}
+                    <Link href={`/dashboard/creator/${template.creatorId?._id || template.creatorId}`} onClick={(e) => e.stopPropagation()} style={{ background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', fontSize: '10px', color: 'white', backdropFilter: 'blur(4px)', textDecoration: 'none' }}>
+                      By @{template.creatorId?.name || template.creatorName || 'unknown'} {template.creatorId?.followers ? ` • ${template.creatorId.followers.length} followers` : ''}
                     </Link>
                   </div>
 

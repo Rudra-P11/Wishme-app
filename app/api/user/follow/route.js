@@ -30,7 +30,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Target user not found' }, { status: 404 });
     }
 
-    const isFollowing = currentUser.following.includes(targetUserId);
+    const isFollowing = (currentUser.following || []).some(id => id.toString() === targetUserId.toString());
 
     if (isFollowing) {
       // Unfollow

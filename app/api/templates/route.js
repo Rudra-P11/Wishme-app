@@ -36,6 +36,7 @@ export async function GET(request) {
     const [templates, total] = await Promise.all([
       Template.find(query)
         .sort({ sortOrder: 1, createdAt: -1 })
+        .populate('creatorId', 'followers name')
         .skip(skip)
         .limit(limit)
         .lean(),
