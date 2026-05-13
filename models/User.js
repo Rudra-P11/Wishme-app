@@ -37,6 +37,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isCreator: {
+      type: Boolean,
+      default: false,
+    },
     profileComplete: {
       type: Boolean,
       default: false,

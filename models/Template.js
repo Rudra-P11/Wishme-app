@@ -63,6 +63,23 @@ const TemplateSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isCommunity: {
+      type: Boolean,
+      default: false,
+    },
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    creatorName: {
+      type: String,
+      default: '',
+    },
+    downloads: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
