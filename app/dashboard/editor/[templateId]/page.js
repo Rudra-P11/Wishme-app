@@ -131,6 +131,24 @@ export default function EditorPage({ params }) {
           tiltAngle: 0
         });
       }
+    } else if (animationEffect === 'hearts') {
+      for (let i = 0; i < 50; i++) {
+        particlesRef.current.push({
+          x: Math.random() * 1080,
+          y: Math.random() * 1080 - 1080,
+          r: Math.random() * 10 + 10,
+          tiltAngle: Math.random() * Math.PI * 2
+        });
+      }
+    } else if (animationEffect === 'rain') {
+      for (let i = 0; i < 150; i++) {
+        particlesRef.current.push({
+          x: Math.random() * 1080,
+          y: Math.random() * 1080 - 1080,
+          r: Math.random() * 10 + 10,
+          d: Math.random() * 2 - 1
+        });
+      }
     }
     
     // Start animation if effect is selected
