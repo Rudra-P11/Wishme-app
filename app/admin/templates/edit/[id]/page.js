@@ -79,7 +79,9 @@ export default function EditTemplatePage({ params }) {
           <div className={styles.formGroup}><label className={styles.formLabel}>Category</label>
             <select name="category" value={form.category} onChange={handleChange} className={styles.formSelect}>
               <option value="birthday">Birthday</option><option value="anniversary">Anniversary</option>
-              <option value="festival">Festival</option><option value="general">General</option></select></div>
+              <option value="festival">Festival</option><option value="love">Love</option>
+              <option value="quote">Quote</option><option value="shayari">Shayari</option>
+              <option value="joke">Joke</option><option value="general">General</option></select></div>
           <div className={styles.formGroup}><label className={styles.formLabel}>Options</label>
             <label className={styles.formCheckbox}><input type="checkbox" name="isPremium" checked={form.isPremium} onChange={handleChange}/> Premium</label>
             <label className={styles.formCheckbox} style={{marginTop:'4px'}}><input type="checkbox" name="isActive" checked={form.isActive} onChange={handleChange}/> Active</label></div>

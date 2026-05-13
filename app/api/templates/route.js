@@ -11,6 +11,8 @@ export async function GET(request) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
 
+    const isCommunity = searchParams.get('isCommunity');
+
     // Build query
     const query = { isActive: true };
     if (category) {
@@ -18,6 +20,15 @@ export async function GET(request) {
     }
     if (isPremium !== null && isPremium !== undefined) {
       query.isPremium = isPremium === 'true';
+    }
+    
+    if (isCommunity === 'true') {
+      query.isCommunity = true;
+    } else if (isCommunity === 'false') {
+      query.isCommunity = { $ne: true };
+    } else {
+      // Default to official templates to preserve existing behavior
+      query.isCommunity = { $ne: true };
     }
 
     const skip = (page - 1) * limit;

@@ -2,14 +2,22 @@
 
 import { Suspense } from 'react';
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import styles from './login.module.css';
 
 function LoginForm() {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push(callbackUrl);
+    }
+  }, [status, router, callbackUrl]);
 
   const [isRegister, setIsRegister] = useState(false);
   const [loading, setLoading] = useState(false);
