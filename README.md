@@ -80,11 +80,18 @@ Since this is an internship project, I implemented the premium system as a **moc
 
 ### For Users
 - **🔐 Multi-Provider Auth** — Sign in with Google, Email/Password, or browse as Guest
-- **🎨 Template Gallery** — Browse 7+ templates across Birthday, Anniversary, and Festival categories
+- **🎨 Template Gallery** — Browse templates across Birthday, Anniversary, Festivals, Quotes, Shayari, Jokes, and Love categories
 - **🖼️ Live Canvas Editor** — Real-time image compositing with circular photo crop and styled name text
+- **✨ Dynamic Animations** — Built-in canvas particle effects (Snow, Confetti, Rain, Hearts) with intense text shadow/glow support
 - **📤 Native Sharing** — Share via WhatsApp, Instagram, Email using the Web Share API on mobile
 - **⬇️ Download** — Export the final card as a high-quality 1080×1080 PNG
 - **👑 Premium Templates** — Upgrade to Pro to unlock exclusive designs
+
+### Creator Economy 🌍
+- **🎨 Creator Studio** — Verified users can build and publish their own templates directly to the Community feed
+- **👥 Public Profiles & Follow Graph** — Dedicated creator profiles with live follower/following counts, PRO/Creator ring badges, and full portfolio grids
+- **⚡ Real-time Social Graph** — Lightning-fast NoSQL Follow/Unfollow database connections similar to Instagram
+- **🌍 Community Hub** — A public marketplace of user-generated templates with creator-attribution badges
 
 ### For Admins
 - **📊 Dashboard** — View total templates, users, and premium subscriber counts
@@ -377,13 +384,17 @@ Admins set these positions visually using the **click-to-place configurator** in
 | Method | Route | Auth | Description |
 |:--|:--|:--|:--|
 | `GET` | `/api/templates` | Public | List templates (with `?category=` filter) |
-| `POST` | `/api/templates` | Admin | Create a new template |
+| `POST` | `/api/templates/user` | Creator | Publish a community template |
+| `GET` | `/api/user/[id]` | Public | Get public creator profile and portfolio |
+| `POST` | `/api/user/follow` | Auth | Toggle Follow/Unfollow social graph |
+| `POST` | `/api/templates` | Admin | Create a new official template |
 | `GET` | `/api/templates/[id]` | Public | Get single template with overlayConfig |
 | `PUT` | `/api/templates/[id]` | Admin | Update template |
 | `DELETE` | `/api/templates/[id]` | Admin | Delete template |
 | `GET` | `/api/user` | Auth | Get current user profile |
 | `PUT` | `/api/user` | Auth | Update user profile |
 | `POST` | `/api/user/premium` | Auth | Toggle premium status (mock) |
+| `POST` | `/api/user/creator` | Auth | Verify user as Creator |
 | `GET` | `/api/admin/stats` | Admin | Dashboard statistics |
 | `GET` | `/api/admin/users` | Admin | List all users |
 | `PUT` | `/api/admin/users` | Admin | Update user role/premium |
@@ -398,7 +409,10 @@ Admins set these positions visually using the **click-to-place configurator** in
 - [x] Web Share API + PNG download
 - [x] Premium subscription (mock)
 - [x] Admin panel with overlay configurator
+- [x] Dynamic Canvas Particle Animations (Snow, Confetti, Rain, Hearts)
+- [x] Creator Economy (Verified Creators, Social Follow Graph, Community Publishing)
 - [ ] Drag-and-drop photo/name positioning in editor
+- [ ] Canvas Animation Video Recording Export (MediaRecorder API)
 - [ ] Server-side OG image generation for social previews
 - [ ] Real payment integration (Razorpay/Stripe)
 - [ ] Template search and favorites
