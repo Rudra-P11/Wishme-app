@@ -13,6 +13,7 @@ export default function EditorPage({ params }) {
   const router = useRouter();
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
+  const renderFrameRef = useRef(null);
 
   const [template, setTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -154,7 +155,7 @@ export default function EditorPage({ params }) {
     // Start animation if effect is selected
     if (animationEffect !== 'none') {
       const loop = () => {
-        renderFrame();
+        if (renderFrameRef.current) renderFrameRef.current();
         animationRef.current = requestAnimationFrame(loop);
       };
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
@@ -337,7 +338,12 @@ export default function EditorPage({ params }) {
     }
   }, [template, userName, customText, customPhoto, animationEffect, session]);
 
-  // Re-render when states change
+  // Keep ref up to date
+  useEffect(() => {
+    renderFrameRef.current = renderFrame;
+  }, [renderFrame]);
+
+  // Re-render when states change (only when no animation is playing)
   useEffect(() => {
     if (animationEffect === 'none') {
       renderFrame();
