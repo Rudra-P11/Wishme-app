@@ -151,7 +151,9 @@ export default function CreatorStudio() {
                 <option value="anniversary">💍 Anniversary</option>
                 <option value="festival">🎆 Festival</option>
                 <option value="love">❤️ Love</option>
-                <option value="quote">📜 Quote</option>
+                <option value="quote">💬 Quote</option>
+                <option value="shayari">🌹 Shayari</option>
+                <option value="joke">😂 Joke</option>
                 <option value="general">🙏 General</option>
               </select>
             </div>

@@ -149,8 +149,10 @@ function CommunityContent() {
                   />
 
                   {/* Creator badge overlay */}
-                  <div style={{ position: 'absolute', bottom: '8px', right: '8px', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', fontSize: '10px', color: 'white', backdropFilter: 'blur(4px)', zIndex: 10 }}>
-                    By @{template.creatorName || 'unknown'}
+                  <div style={{ position: 'absolute', bottom: '8px', right: '8px', zIndex: 10 }}>
+                    <Link href={`/dashboard/creator/${template.creatorId}`} onClick={(e) => e.stopPropagation()} style={{ background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '12px', fontSize: '10px', color: 'white', backdropFilter: 'blur(4px)', textDecoration: 'none' }}>
+                      By @{template.creatorName || 'unknown'}
+                    </Link>
                   </div>
 
                   {/* Hover overlay */}

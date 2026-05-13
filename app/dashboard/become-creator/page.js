@@ -21,7 +21,7 @@ export default function BecomeCreator() {
           await update(); // Refresh session
           setStep(2);
           setTimeout(() => {
-            router.push('/dashboard/create');
+            window.location.href = '/dashboard/create';
           }, 2000);
         } else {
           alert('Failed to apply. Please try again.');
