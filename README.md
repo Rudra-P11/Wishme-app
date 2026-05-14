@@ -25,54 +25,60 @@
 
 ---
 
-## 🎯 Problem Statement
+## 🎯 What is Wishme?
 
-Build a mobile/web application that enables users to create personalized greeting cards and wishes. The app should allow users to select background templates and automatically overlay their profile picture and name onto the image for a customized experience. The final merged image should be shareable via social platforms like WhatsApp, Instagram, and Email.
+Wishme is a community-driven platform for creating and sharing personalized greeting cards. Anyone can pick a beautiful template, overlay their name and photo using a live canvas editor, add animations, and share directly to WhatsApp — all in under 60 seconds.
+
+Beyond simple cards, Wishme has a full Creator Economy: verified designers can publish their own templates to the Community Hub, build a following, and reach thousands of users worldwide. Think Figma Community meets Instagram — but for personalized wishes.
 
 ---
 
-## 💡 My Approach & Key Decisions
+## 💡 Architecture & Design Decisions
 
 ### Why Next.js 16 (App Router)?
 
-I chose **Next.js** because it gives me a full-stack framework out of the box — I get **React** for the frontend, **API routes** as my backend, **server-side rendering** for SEO on the landing page, and **file-based routing** that keeps the project structure clean. Using the App Router (instead of Pages Router) was a deliberate choice because it supports React Server Components, which means the landing page loads faster since it doesn't ship unnecessary JavaScript to the browser.
+**Next.js** gives us a full-stack framework in a single repo — React for the frontend, API routes as the backend, server-side rendering for SEO on the landing page, and file-based routing that keeps the project structure clean. The App Router supports React Server Components, meaning the landing page ships less JavaScript and loads faster for users on slower mobile connections.
 
 ### Why Client-Side Canvas Instead of Server-Side Image Processing?
 
-This was my most important architectural decision. I had two options:
+This was the most important architectural decision. We had two options:
 
 | Approach | Pros | Cons |
 |:--|:--|:--|
 | **Server-side** (Sharp/ImageMagick) | Works on any device | Server compute costs, latency per render, no live preview |
 | **Client-side** (HTML5 Canvas) | Instant live preview, zero server cost, works offline | Requires modern browser |
 
-I went with **HTML5 Canvas API** for three reasons:
+We went with **HTML5 Canvas API** for three reasons:
 1. **Live preview** — Users see changes the instant they type their name or upload a photo. No waiting for a server round-trip.
 2. **Zero server cost** — All image compositing happens in the browser. The server only stores template metadata.
 3. **Offline-capable** — Once the template image is loaded, the editor works without internet.
 
 ### Why MongoDB Atlas (NoSQL) Over PostgreSQL?
 
-Templates have a flexible `overlayConfig` object with nested properties (positions, fonts, colors, shapes). In a relational database, this would require either a JSON column or multiple join tables. MongoDB's document model lets me store the entire config as a nested object naturally — no schema migrations needed when I add new overlay features.
+Templates have a flexible `overlayConfig` object with nested properties (positions, fonts, colors, shapes). In a relational database, this would require either a JSON column or multiple join tables. MongoDB's document model stores the entire config as a nested object naturally — no schema migrations needed when new overlay features are added.
+
+The **social follow graph** is also a natural fit for MongoDB: each user stores `followers` and `following` as arrays of ObjectIDs, enabling fast, atomic `$addToSet` / `$pull` operations identical to how Instagram and Twitter model their follow relationships.
 
 ### Why Auth.js (NextAuth v5)?
 
-I needed three auth methods: Google OAuth, email/password, and guest mode. Auth.js v5 supports all three out of the box with a unified session API. The JWT strategy means I don't need server-side session storage — the entire session lives in a signed cookie, which is simpler to deploy on serverless platforms like Vercel.
+Three auth methods are needed: Google OAuth, email/password, and guest mode. Auth.js v5 supports all three out of the box with a unified session API. The JWT strategy means no server-side session storage — the entire session lives in a signed cookie, which deploys trivially on serverless platforms like Vercel.
 
 ### Why Custom CSS Over Tailwind?
 
-I chose **CSS Modules with custom properties** instead of Tailwind because:
-- I wanted full control over the design system (custom dark theme with glassmorphism effects)
-- CSS nesting (a modern CSS feature) keeps my styles readable without preprocessors
+We chose **CSS Modules with custom properties** instead of Tailwind because:
+- Full control over the design system (custom dark theme with glassmorphism effects)
+- CSS nesting (a modern CSS feature) keeps styles readable without preprocessors
 - CSS Modules provide automatic scoping without class name conflicts
 - No build-time dependency on a utility framework
 
-### Why Mock Payments Instead of a Real Gateway?
+### On the Payment System
 
-Since this is an internship project, I implemented the premium system as a **mock toggle** — clicking "Upgrade" instantly sets `isPremium: true` in the database. The architecture is designed so that swapping in a real payment gateway (Razorpay/Stripe) only requires:
+The premium system is currently a **mock toggle** — clicking "Upgrade" sets `isPremium: true` in the database instantly. The architecture is designed so swapping in a real payment gateway (Razorpay/Stripe) only requires:
 1. Adding a payment route
 2. Changing the `/api/user/premium` endpoint to verify payment before toggling
 3. Adding webhook handlers for subscription management
+
+This is a great area for contributors to help with!
 
 ---
 
@@ -401,25 +407,49 @@ Admins set these positions visually using the **click-to-place configurator** in
 
 ---
 
-## 🗺️ Future Roadmap
+## 🤝 Contributing
 
-- [x] Authentication (Google + Email + Guest)
-- [x] Template gallery with category filtering
-- [x] HTML5 Canvas editor with live preview
-- [x] Web Share API + PNG download
-- [x] Premium subscription (mock)
-- [x] Admin panel with overlay configurator
-- [x] Dynamic Canvas Particle Animations (Snow, Confetti, Rain, Hearts)
-- [x] Creator Economy (Verified Creators, Social Follow Graph, Community Publishing)
-- [ ] Drag-and-drop photo/name positioning in editor
-- [ ] Canvas Animation Video Recording Export (MediaRecorder API)
-- [ ] Server-side OG image generation for social previews
-- [ ] Real payment integration (Razorpay/Stripe)
-- [ ] Template search and favorites
-- [ ] PWA support for offline access
+Wishme is **open source and community-driven**. We welcome contributions of all kinds — whether it's squashing a bug, adding a new template category, building an animation effect, or implementing a full feature like video export.
+
+### How to Contribute
+
+1. **Fork** the repository on GitHub
+2. **Clone** your fork locally
+   ```bash
+   git clone https://github.com/your-username/wishme.git
+   cd wishme
+   ```
+3. **Create a branch** for your feature or fix
+   ```bash
+   git checkout -b feat/my-awesome-feature
+   ```
+4. **Make your changes**, following the existing code style
+5. **Test** your changes locally with `npm run dev`
+6. **Open a Pull Request** with a clear description of what you changed and why
+
+### Good First Issues
+
+Looking for a place to start? Here are some high-impact contributions we would love help with:
+
+| Area | Contribution |
+|:--|:--|
+| 🎥 **Video Export** | Use `MediaRecorder` API to export 5s canvas animations as MP4/GIF |
+| 💳 **Real Payments** | Integrate Razorpay or Stripe into `/api/user/premium` |
+| 🔍 **Template Search** | Full-text search on the community hub with debounce |
+| 📱 **PWA Support** | Add a service worker and manifest for offline access |
+| 🖱️ **Drag & Drop** | Replace the D-pad nudge controls with native drag handles on canvas |
+| 🌐 **i18n** | Internationalization for Hindi, Tamil, Telugu, and other regional languages |
+| 🧪 **Tests** | Add Playwright E2E tests for the editor and auth flows |
+| 🎨 **New Templates** | Design and submit new 1080×1080 templates for the community |
+
+### Code of Conduct
+
+Be kind and respectful. We are building something for everyone — collaboration is everything.
 
 ---
 
 ## 📝 License
 
-Built as an internship task submission for Classplus.
+MIT — free for personal and commercial use. See [`LICENSE`](./LICENSE) for details.
+
+Made with ❤️ by the Wishme open-source community.
