@@ -460,6 +460,8 @@ export default function EditorPage({ params }) {
     setTimeout(() => setToast(''), 3000);
   };
 
+  const [activeTab, setActiveTab] = useState('text');
+
   if (loading) {
     return (
       <div className={styles.editorPage}>
@@ -472,320 +474,320 @@ export default function EditorPage({ params }) {
 
   return (
     <div className={styles.editorPage}>
-      <div className={styles.editorHeader}>
-        <Link href="/dashboard" className={styles.backBtn}>
-          ← Back
-        </Link>
-        <h2 className={styles.editorTitle}>{template?.title}</h2>
+      {/* 1. Left Sidebar */}
+      <div className={styles.sidebar}>
+        <button className={`${styles.tabBtn} ${activeTab === 'text' ? styles.active : ''}`} onClick={() => setActiveTab('text')}>
+          <span className={styles.tabIcon}>T</span>
+          Text
+        </button>
+        <button className={`${styles.tabBtn} ${activeTab === 'photo' ? styles.active : ''}`} onClick={() => setActiveTab('photo')}>
+          <span className={styles.tabIcon}>🖼️</span>
+          Photo
+        </button>
+        <button className={`${styles.tabBtn} ${activeTab === 'effects' ? styles.active : ''}`} onClick={() => setActiveTab('effects')}>
+          <span className={styles.tabIcon}>✨</span>
+          Effects
+        </button>
+        <button className={`${styles.tabBtn} ${activeTab === 'ai' ? styles.active : ''}`} onClick={() => setActiveTab('ai')}>
+          <span className={styles.tabIcon}>🤖</span>
+          AI Writer
+        </button>
       </div>
 
-      <div className={styles.editorContent}>
-        {/* Canvas Preview */}
-        <div className={styles.canvasWrap}>
-          {rendering && (
-            <div className={styles.canvasLoading}>
-              <div className={styles.spinner}></div>
-            </div>
-          )}
-          <canvas
-            ref={canvasRef}
-            className={styles.canvas}
-            id="greeting-canvas"
-          />
+      {/* 2. Sliding Tool Panel */}
+      <div className={styles.toolPanel}>
+        <div className={styles.toolPanelHeader}>
+          <h2>
+            {activeTab === 'text' && 'Text Customization'}
+            {activeTab === 'photo' && 'Photo Adjustments'}
+            {activeTab === 'effects' && 'Animations'}
+            {activeTab === 'ai' && 'AI Message Generator'}
+          </h2>
         </div>
 
-        {/* Controls */}
-        <div className={styles.controls}>
-          {/* Name editor */}
-          <div className={styles.controlCard}>
-            <h3>Your Name</h3>
-            <input
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              className={styles.controlInput}
-              placeholder="Enter your name"
-              id="name-input"
-            />
-            
-            <button 
-              className={styles.toggleCustomizer} 
-              onClick={() => setShowTextCustomizer(!showTextCustomizer)}
-            >
-              {showTextCustomizer ? '▼ Hide Adjustments' : '⚙️ Fine-tune Text'}
-            </button>
+        <div className={styles.toolPanelContent}>
+          {/* TEXT TAB */}
+          {activeTab === 'text' && (
+            <>
+              <div className={styles.controlGroup}>
+                <label>Your Name</label>
+                <input
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  className={styles.controlInput}
+                  placeholder="Enter your name"
+                />
+              </div>
 
-            {showTextCustomizer && (
-              <div className={styles.customizerPanel}>
-                <div className={styles.customizerRow}>
-                  <label>Font Style</label>
-                  <div className={styles.fontButtons}>
-                    {[
-                      { name: 'Outfit', label: 'Abc' },
-                      { name: 'Playfair Display', label: 'Elegant' },
-                      { name: 'Caveat', label: 'Hand' },
-                      { name: 'Comic Neue', label: 'Fun' },
-                      { name: 'Tiro Devanagari Hindi', label: 'हिंदी' },
-                      { name: 'Mukta', label: 'मराठी' }
-                    ].map(font => (
-                      <button
-                        key={font.name}
-                        className={`${styles.fontBtn} ${customText.fontFamily === font.name ? styles.active : ''}`}
-                        onClick={() => setCustomText(prev => ({ ...prev, fontFamily: font.name }))}
-                        style={{ fontFamily: font.name }}
-                        title={font.name}
-                      >
-                        {font.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className={styles.customizerRow}>
-                  <label>Size</label>
-                  <input 
-                    type="range" 
-                    min="0.5" max="1.5" step="0.1" 
-                    value={customText.fontSizeScale}
-                    onChange={(e) => setCustomText(prev => ({ ...prev, fontSizeScale: parseFloat(e.target.value) }))}
-                    className={styles.slider}
-                  />
-                </div>
-
-                <div className={styles.customizerRow}>
-                  <label>Color & Effects</label>
-                  <div className={styles.effectsRow}>
-                    <input 
-                      type="color" 
-                      value={customText.color || template?.overlayConfig?.nameColor || '#ffffff'}
-                      onChange={(e) => setCustomText(prev => ({ ...prev, color: e.target.value }))}
-                      className={styles.colorPicker}
-                      title="Choose text color"
-                    />
-                    <button type="button"
-                      className={`${styles.effectBtn} ${customText.shadow ? styles.active : ''}`}
-                      onClick={() => setCustomText(prev => ({ ...prev, shadow: !prev.shadow, glow: false }))}
+              <div className={styles.controlGroup}>
+                <label>Font Style</label>
+                <div className={styles.fontGrid}>
+                  {[
+                    { name: 'Outfit', label: 'Modern' },
+                    { name: 'Playfair Display', label: 'Elegant' },
+                    { name: 'Caveat', label: 'Handwritten' },
+                    { name: 'Tiro Devanagari Hindi', label: 'हिंदी' },
+                  ].map(font => (
+                    <button
+                      key={font.name}
+                      className={`${styles.fontBtn} ${customText.fontFamily === font.name ? styles.active : ''}`}
+                      onClick={() => setCustomText(prev => ({ ...prev, fontFamily: font.name }))}
+                      style={{ fontFamily: font.name }}
                     >
-                      Shadow
+                      {font.label}
                     </button>
-                    <button type="button"
-                      className={`${styles.effectBtn} ${customText.glow ? styles.active : ''}`}
-                      onClick={() => setCustomText(prev => ({ ...prev, glow: !prev.glow, shadow: false }))}
-                    >
-                      Glow ✨
-                    </button>
-                  </div>
-                </div>
-
-                <div className={styles.customizerRow}>
-                  <label>Position Nudge</label>
-                  <div className={styles.dpad}>
-                    <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetY: prev.offsetY - 10 }))}>↑</button>
-                    <div>
-                      <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetX: prev.offsetX - 10 }))}>←</button>
-                      <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetX: prev.offsetX + 10 }))}>→</button>
-                    </div>
-                    <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetY: prev.offsetY + 10 }))}>↓</button>
-                  </div>
+                  ))}
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* Photo editor */}
-          <div className={styles.controlCard}>
-            <h3>Your Photo</h3>
-            <div className={styles.photoUpload}>
-              {userPhoto ? (
-                <img
-                  src={userPhoto}
-                  alt="Profile"
-                  className={styles.photoPreview}
+              <div className={styles.controlGroup}>
+                <label>Text Size</label>
+                <input 
+                  type="range" 
+                  min="0.5" max="1.5" step="0.1" 
+                  value={customText.fontSizeScale}
+                  onChange={(e) => setCustomText(prev => ({ ...prev, fontSizeScale: parseFloat(e.target.value) }))}
+                  className={styles.slider}
                 />
-              ) : (
-                <div className={styles.photoPlaceholder}>📷</div>
+              </div>
+
+              <div className={styles.controlGroup}>
+                <label>Color & Styling</label>
+                <div className={styles.effectsRow}>
+                  <input 
+                    type="color" 
+                    value={customText.color || template?.overlayConfig?.nameColor || '#ffffff'}
+                    onChange={(e) => setCustomText(prev => ({ ...prev, color: e.target.value }))}
+                    className={styles.colorPicker}
+                  />
+                  <button type="button"
+                    className={`${styles.effectBtn} ${customText.shadow ? styles.active : ''}`}
+                    onClick={() => setCustomText(prev => ({ ...prev, shadow: !prev.shadow, glow: false }))}
+                  >
+                    Shadow
+                  </button>
+                  <button type="button"
+                    className={`${styles.effectBtn} ${customText.glow ? styles.active : ''}`}
+                    onClick={() => setCustomText(prev => ({ ...prev, glow: !prev.glow, shadow: false }))}
+                  >
+                    Glow ✨
+                  </button>
+                </div>
+              </div>
+
+              <div className={styles.controlGroup}>
+                <label>Position Nudge</label>
+                <div className={styles.dpad}>
+                  <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetY: prev.offsetY - 10 }))}>↑</button>
+                  <div>
+                    <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetX: prev.offsetX - 10 }))}>←</button>
+                    <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetX: prev.offsetX + 10 }))}>→</button>
+                  </div>
+                  <button type="button" onClick={() => setCustomText(prev => ({ ...prev, offsetY: prev.offsetY + 10 }))}>↓</button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* PHOTO TAB */}
+          {activeTab === 'photo' && (
+            <>
+              <div className={styles.controlGroup} style={{ alignItems: 'center', marginBottom: '1rem' }}>
+                {userPhoto ? (
+                  <img src={userPhoto} alt="Profile" className={styles.photoPreview} />
+                ) : (
+                  <div className={styles.photoPlaceholder}>📷</div>
+                )}
+                <button onClick={() => fileInputRef.current?.click()} className={styles.uploadBtn} type="button">
+                  {userPhoto ? 'Change Photo' : 'Upload Photo'}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  style={{ display: 'none' }}
+                />
+              </div>
+
+              {userPhoto && (
+                <>
+                  <div className={styles.controlGroup}>
+                    <label>Photo Size</label>
+                    <input 
+                      type="range" 
+                      min="0.5" max="1.5" step="0.1" 
+                      value={customPhoto.sizeScale}
+                      onChange={(e) => setCustomPhoto(prev => ({ ...prev, sizeScale: parseFloat(e.target.value) }))}
+                      className={styles.slider}
+                    />
+                  </div>
+                  <div className={styles.controlGroup}>
+                    <label>Position Nudge</label>
+                    <div className={styles.dpad}>
+                      <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetY: prev.offsetY - 10 }))}>↑</button>
+                      <div>
+                        <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetX: prev.offsetX - 10 }))}>←</button>
+                        <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetX: prev.offsetX + 10 }))}>→</button>
+                      </div>
+                      <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetY: prev.offsetY + 10 }))}>↓</button>
+                    </div>
+                  </div>
+                </>
               )}
+            </>
+          )}
+
+          {/* EFFECTS TAB */}
+          {activeTab === 'effects' && (
+            <div className={styles.controlGroup}>
+              <label>Select Animation Particle</label>
+              <div className={styles.fontGrid}>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'none' ? styles.active : ''}`} onClick={() => setAnimationEffect('none')}>None</button>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'snow' ? styles.active : ''}`} onClick={() => setAnimationEffect('snow')}>❄️ Snow</button>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'confetti' ? styles.active : ''}`} onClick={() => setAnimationEffect('confetti')}>🎉 Confetti</button>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'hearts' ? styles.active : ''}`} onClick={() => setAnimationEffect('hearts')}>❤️ Hearts</button>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'rain' ? styles.active : ''}`} onClick={() => setAnimationEffect('rain')}>🌧️ Rain</button>
+              </div>
+            </div>
+          )}
+
+          {/* AI TAB */}
+          {activeTab === 'ai' && (
+            <>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Generate a beautiful message to send along with your card on WhatsApp.</p>
+              
+              <div className={styles.controlGroup}>
+                <label>Language</label>
+                <select 
+                  value={aiLanguage} 
+                  onChange={(e) => setAiLanguage(e.target.value)}
+                  className={styles.controlInput}
+                >
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Marathi">Marathi</option>
+                  <option value="Bengali">Bengali</option>
+                  <option value="Gujarati">Gujarati</option>
+                </select>
+              </div>
+
+              <div className={styles.controlGroup}>
+                <label>What's the occasion?</label>
+                <input
+                  type="text"
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  className={styles.controlInput}
+                  placeholder="e.g. funny 30th birthday wish for brother"
+                />
+              </div>
+
               <button
-                onClick={() => fileInputRef.current?.click()}
+                onClick={async () => {
+                  if (!aiPrompt) return;
+                  setIsGenerating(true);
+                  try {
+                    const res = await fetch('/api/ai/generate-message', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ prompt: aiPrompt, language: aiLanguage, category: template?.category })
+                    });
+                    const data = await res.json();
+                    if (data.message) {
+                      setAiMessage(data.message);
+                    } else {
+                      setToast(data.error || 'Failed to generate');
+                    }
+                  } catch (err) {
+                    setToast('Error generating message');
+                  } finally {
+                    setIsGenerating(false);
+                  }
+                }}
+                disabled={isGenerating || !aiPrompt}
                 className={styles.uploadBtn}
+                style={{ background: 'var(--gradient-primary)', color: 'white', border: 'none', padding: '0.75rem' }}
                 type="button"
               >
-                {userPhoto ? 'Change Photo' : 'Upload Photo'}
+                {isGenerating ? '⏳ Generating...' : '✨ Generate AI Message'}
               </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                className={styles.hiddenInput}
-                id="photo-upload-input"
-              />
-            </div>
 
-            {userPhoto && (
-              <>
-                <button 
-                  className={styles.toggleCustomizer} 
-                  onClick={() => setShowPhotoCustomizer(!showPhotoCustomizer)}
-                >
-                  {showPhotoCustomizer ? '▼ Hide Adjustments' : '⚙️ Fine-tune Photo'}
-                </button>
+              {aiMessage && (
+                <div style={{ position: 'relative', marginTop: '1rem' }}>
+                  <textarea 
+                    readOnly 
+                    value={aiMessage} 
+                    className={styles.aiTextArea}
+                  />
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(aiMessage);
+                      setToast('Copied to clipboard!');
+                      setTimeout(() => setToast(''), 3000);
+                    }}
+                    className={styles.copyBtn}
+                    style={{ position: 'absolute', bottom: '12px', right: '12px', width: 'auto' }}
+                    type="button"
+                  >
+                    📋 Copy
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
 
-                {showPhotoCustomizer && (
-                  <div className={styles.customizerPanel}>
-                    <div className={styles.customizerRow}>
-                      <label>Photo Size</label>
-                      <input 
-                        type="range" 
-                        min="0.5" max="1.5" step="0.1" 
-                        value={customPhoto.sizeScale}
-                        onChange={(e) => setCustomPhoto(prev => ({ ...prev, sizeScale: parseFloat(e.target.value) }))}
-                        className={styles.slider}
-                      />
-                    </div>
-
-                    <div className={styles.customizerRow}>
-                      <label>Position Nudge</label>
-                      <div className={styles.dpad}>
-                        <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetY: prev.offsetY - 10 }))}>↑</button>
-                        <div>
-                          <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetX: prev.offsetX - 10 }))}>←</button>
-                          <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetX: prev.offsetX + 10 }))}>→</button>
-                        </div>
-                        <button type="button" onClick={() => setCustomPhoto(prev => ({ ...prev, offsetY: prev.offsetY + 10 }))}>↓</button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
+      {/* 3. Workspace Area */}
+      <div className={styles.workspace}>
+        <div className={styles.workspaceHeader}>
+          <div className={styles.headerLeft}>
+            <Link href="/dashboard" className={styles.backBtn}>
+              ← Back
+            </Link>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
+              {template?.title}
+            </h2>
           </div>
-
-          {/* Effects editor */}
-          <div className={styles.controlCard}>
-            <h3>Animation Effect</h3>
-            <div className={styles.animationBtns}>
-              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'none' ? styles.active : ''}`} onClick={() => setAnimationEffect('none')}>None</button>
-              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'snow' ? styles.active : ''}`} onClick={() => setAnimationEffect('snow')}>❄️ Snow</button>
-              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'confetti' ? styles.active : ''}`} onClick={() => setAnimationEffect('confetti')}>🎉 Confetti</button>
-              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'hearts' ? styles.active : ''}`} onClick={() => setAnimationEffect('hearts')}>❤️ Hearts</button>
-              <button type="button" className={`${styles.effectBtn} ${animationEffect === 'rain' ? styles.active : ''}`} onClick={() => setAnimationEffect('rain')}>🌧️ Rain</button>
-            </div>
-          </div>
-
-          {/* AI Message Generator */}
-          <div className={styles.controlCard} style={{ border: '2px solid transparent', background: 'linear-gradient(var(--bg-card), var(--bg-card)) padding-box, linear-gradient(135deg, #3b82f6, #8b5cf6) border-box' }}>
-            <h3>✨ AI Caption Generator</h3>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Generate a beautiful message to send along with your card.</p>
-            
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-              <input
-                type="text"
-                value={aiPrompt}
-                onChange={(e) => setAiPrompt(e.target.value)}
-                className={styles.controlInput}
-                placeholder="e.g. funny 30th birthday wish for brother"
-                style={{ flex: 1 }}
-              />
-              <select 
-                value={aiLanguage} 
-                onChange={(e) => setAiLanguage(e.target.value)}
-                className={styles.controlInput}
-                style={{ width: 'auto', padding: '0.5rem' }}
-              >
-                <option value="English">English</option>
-                <option value="Hindi">Hindi</option>
-                <option value="Tamil">Tamil</option>
-                <option value="Telugu">Telugu</option>
-                <option value="Marathi">Marathi</option>
-                <option value="Bengali">Bengali</option>
-                <option value="Gujarati">Gujarati</option>
-              </select>
-            </div>
-
+          <div className={styles.headerActions}>
             <button
-              onClick={async () => {
-                if (!aiPrompt) return;
-                setIsGenerating(true);
-                try {
-                  const res = await fetch('/api/ai/generate-message', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: aiPrompt, language: aiLanguage, category: template?.category })
-                  });
-                  const data = await res.json();
-                  if (data.message) {
-                    setAiMessage(data.message);
-                  } else {
-                    setToast(data.error || 'Failed to generate');
-                  }
-                } catch (err) {
-                  setToast('Error generating message');
-                } finally {
-                  setIsGenerating(false);
-                }
-              }}
-              disabled={isGenerating || !aiPrompt}
-              className={styles.uploadBtn}
-              style={{ width: '100%', marginBottom: '1rem', background: 'var(--gradient-primary)', color: 'white', border: 'none' }}
-              type="button"
+              onClick={handleExportVideo}
+              disabled={isExporting}
+              className={styles.exportVideoBtn}
             >
-              {isGenerating ? '⏳ Generating...' : '✨ Generate Message'}
-            </button>
-
-            {aiMessage && (
-              <div style={{ background: 'var(--bg-tertiary)', padding: '1rem', borderRadius: '8px', position: 'relative' }}>
-                <p style={{ fontSize: '0.9rem', whiteSpace: 'pre-wrap', margin: 0, paddingBottom: '2rem' }}>{aiMessage}</p>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(aiMessage);
-                    setToast('Message copied to clipboard!');
-                    setTimeout(() => setToast(''), 3000);
-                  }}
-                  style={{
-                    position: 'absolute',
-                    bottom: '8px',
-                    right: '8px',
-                    background: 'var(--bg-card)',
-                    border: '1px solid var(--border-default)',
-                    padding: '4px 12px',
-                    borderRadius: '4px',
-                    fontSize: '0.8rem',
-                    cursor: 'pointer'
-                  }}
-                  type="button"
-                >
-                  📋 Copy
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Actions */}
-          <div className={styles.actions}>
-            <button
-              onClick={handleShare}
-              className={styles.shareBtn}
-              id="share-button"
-            >
-              🚀 Share Card
+              {isExporting ? '⏳ Recording...' : '🎥 Export Video'}
             </button>
             <button
               onClick={handleDownload}
               className={styles.downloadBtn}
-              id="download-button"
             >
-              ⬇️ Download PNG
+              ⬇️ Download
             </button>
             <button
-              onClick={handleExportVideo}
-              disabled={isExporting}
-              className={styles.downloadBtn}
-              id="export-video-button"
-              style={{ borderColor: 'var(--color-secondary)', color: 'var(--color-secondary)' }}
+              onClick={handleShare}
+              className={styles.shareBtn}
             >
-              {isExporting ? '⏳ Recording...' : '🎥 Export 5s Video'}
+              🚀 Share Card
             </button>
+          </div>
+        </div>
+
+        <div className={styles.canvasContainer}>
+          <div className={styles.canvasWrap}>
+            {rendering && (
+              <div className={styles.canvasLoading}>
+                <div className={styles.spinner}></div>
+              </div>
+            )}
+            <canvas
+              ref={canvasRef}
+              className={styles.canvas}
+              id="greeting-canvas"
+            />
           </div>
         </div>
       </div>
