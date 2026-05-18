@@ -29,6 +29,12 @@ export default function EditorPage({ params }) {
   const [showTextCustomizer, setShowTextCustomizer] = useState(false);
   const [showPhotoCustomizer, setShowPhotoCustomizer] = useState(false);
 
+  // AI Generator state
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiLanguage, setAiLanguage] = useState('English');
+  const [aiMessage, setAiMessage] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const [customText, setCustomText] = useState({
     fontFamily: '',
     fontSizeScale: 1,
@@ -665,6 +671,94 @@ export default function EditorPage({ params }) {
               <button type="button" className={`${styles.effectBtn} ${animationEffect === 'hearts' ? styles.active : ''}`} onClick={() => setAnimationEffect('hearts')}>❤️ Hearts</button>
               <button type="button" className={`${styles.effectBtn} ${animationEffect === 'rain' ? styles.active : ''}`} onClick={() => setAnimationEffect('rain')}>🌧️ Rain</button>
             </div>
+          </div>
+
+          {/* AI Message Generator */}
+          <div className={styles.controlCard} style={{ border: '2px solid transparent', background: 'linear-gradient(var(--bg-card), var(--bg-card)) padding-box, linear-gradient(135deg, #3b82f6, #8b5cf6) border-box' }}>
+            <h3>✨ AI Caption Generator</h3>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Generate a beautiful message to send along with your card.</p>
+            
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+              <input
+                type="text"
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                className={styles.controlInput}
+                placeholder="e.g. funny 30th birthday wish for brother"
+                style={{ flex: 1 }}
+              />
+              <select 
+                value={aiLanguage} 
+                onChange={(e) => setAiLanguage(e.target.value)}
+                className={styles.controlInput}
+                style={{ width: 'auto', padding: '0.5rem' }}
+              >
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Tamil">Tamil</option>
+                <option value="Telugu">Telugu</option>
+                <option value="Marathi">Marathi</option>
+                <option value="Bengali">Bengali</option>
+                <option value="Gujarati">Gujarati</option>
+              </select>
+            </div>
+
+            <button
+              onClick={async () => {
+                if (!aiPrompt) return;
+                setIsGenerating(true);
+                try {
+                  const res = await fetch('/api/ai/generate-message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: aiPrompt, language: aiLanguage, category: template?.category })
+                  });
+                  const data = await res.json();
+                  if (data.message) {
+                    setAiMessage(data.message);
+                  } else {
+                    setToast(data.error || 'Failed to generate');
+                  }
+                } catch (err) {
+                  setToast('Error generating message');
+                } finally {
+                  setIsGenerating(false);
+                }
+              }}
+              disabled={isGenerating || !aiPrompt}
+              className={styles.uploadBtn}
+              style={{ width: '100%', marginBottom: '1rem', background: 'var(--gradient-primary)', color: 'white', border: 'none' }}
+              type="button"
+            >
+              {isGenerating ? '⏳ Generating...' : '✨ Generate Message'}
+            </button>
+
+            {aiMessage && (
+              <div style={{ background: 'var(--bg-tertiary)', padding: '1rem', borderRadius: '8px', position: 'relative' }}>
+                <p style={{ fontSize: '0.9rem', whiteSpace: 'pre-wrap', margin: 0, paddingBottom: '2rem' }}>{aiMessage}</p>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(aiMessage);
+                    setToast('Message copied to clipboard!');
+                    setTimeout(() => setToast(''), 3000);
+                  }}
+                  style={{
+                    position: 'absolute',
+                    bottom: '8px',
+                    right: '8px',
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-default)',
+                    padding: '4px 12px',
+                    borderRadius: '4px',
+                    fontSize: '0.8rem',
+                    cursor: 'pointer'
+                  }}
+                  type="button"
+                >
+                  📋 Copy
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Actions */}
