@@ -4,11 +4,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
+import { Sun, Moon } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
   const isActive = (path) => pathname === path || pathname.startsWith(path + '/');
 
@@ -97,6 +100,18 @@ export default function Navbar() {
             Get Started
           </Link>
         )}
+
+        {/* Global Theme Toggle - always visible */}
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className={styles.themeToggle}
+          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark'
+            ? <Sun size={18} strokeWidth={2} />
+            : <Moon size={18} strokeWidth={2} />}
+        </button>
       </div>
     </nav>
   );

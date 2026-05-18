@@ -2,6 +2,7 @@ import { Inter, Outfit } from 'next/font/google';
 import './globals.css';
 import AuthProvider from '@/components/providers/AuthProvider';
 import Navbar from '@/components/layout/Navbar';
+import ThemeProvider from '@/components/providers/ThemeProvider';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -29,17 +30,19 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable}`} data-scroll-behavior="smooth">
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Comic+Neue:wght@700&family=Outfit:wght@700&family=Playfair+Display:wght@700&family=Tiro+Devanagari+Hindi:ital@0;1&family=Mukta:wght@700&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <AuthProvider>
-          <Navbar />
-          <main style={{ paddingTop: 'var(--navbar-height)' }}>{children}</main>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <Navbar />
+            <main style={{ paddingTop: 'var(--navbar-height)' }}>{children}</main>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

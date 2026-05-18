@@ -5,11 +5,14 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
+import { Type, Image as ImageIcon, Wand2, Bot, Sun, Moon, Download, Share2, Video, Copy, Sparkles, Snowflake, Heart, CloudRain, ChevronLeft } from 'lucide-react';
 import styles from './editor.module.css';
 
 export default function EditorPage({ params }) {
   const { templateId } = use(params);
   const { data: session } = useSession();
+  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -477,19 +480,19 @@ export default function EditorPage({ params }) {
       {/* 1. Left Sidebar */}
       <div className={styles.sidebar}>
         <button className={`${styles.tabBtn} ${activeTab === 'text' ? styles.active : ''}`} onClick={() => setActiveTab('text')}>
-          <span className={styles.tabIcon}>T</span>
+          <Type className={styles.tabIcon} size={24} />
           Text
         </button>
         <button className={`${styles.tabBtn} ${activeTab === 'photo' ? styles.active : ''}`} onClick={() => setActiveTab('photo')}>
-          <span className={styles.tabIcon}>🖼️</span>
+          <ImageIcon className={styles.tabIcon} size={24} />
           Photo
         </button>
         <button className={`${styles.tabBtn} ${activeTab === 'effects' ? styles.active : ''}`} onClick={() => setActiveTab('effects')}>
-          <span className={styles.tabIcon}>✨</span>
+          <Wand2 className={styles.tabIcon} size={24} />
           Effects
         </button>
         <button className={`${styles.tabBtn} ${activeTab === 'ai' ? styles.active : ''}`} onClick={() => setActiveTab('ai')}>
-          <span className={styles.tabIcon}>🤖</span>
+          <Bot className={styles.tabIcon} size={24} />
           AI Writer
         </button>
       </div>
@@ -645,10 +648,10 @@ export default function EditorPage({ params }) {
               <label>Select Animation Particle</label>
               <div className={styles.fontGrid}>
                 <button type="button" className={`${styles.fontBtn} ${animationEffect === 'none' ? styles.active : ''}`} onClick={() => setAnimationEffect('none')}>None</button>
-                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'snow' ? styles.active : ''}`} onClick={() => setAnimationEffect('snow')}>❄️ Snow</button>
-                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'confetti' ? styles.active : ''}`} onClick={() => setAnimationEffect('confetti')}>🎉 Confetti</button>
-                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'hearts' ? styles.active : ''}`} onClick={() => setAnimationEffect('hearts')}>❤️ Hearts</button>
-                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'rain' ? styles.active : ''}`} onClick={() => setAnimationEffect('rain')}>🌧️ Rain</button>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'snow' ? styles.active : ''}`} onClick={() => setAnimationEffect('snow')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}><Snowflake size={16} /> Snow</button>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'confetti' ? styles.active : ''}`} onClick={() => setAnimationEffect('confetti')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}><Sparkles size={16} /> Confetti</button>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'hearts' ? styles.active : ''}`} onClick={() => setAnimationEffect('hearts')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}><Heart size={16} /> Hearts</button>
+                <button type="button" className={`${styles.fontBtn} ${animationEffect === 'rain' ? styles.active : ''}`} onClick={() => setAnimationEffect('rain')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}><CloudRain size={16} /> Rain</button>
               </div>
             </div>
           )}
@@ -710,10 +713,11 @@ export default function EditorPage({ params }) {
                 }}
                 disabled={isGenerating || !aiPrompt}
                 className={styles.uploadBtn}
-                style={{ background: 'var(--gradient-primary)', color: 'white', border: 'none', padding: '0.75rem' }}
+                style={{ background: 'var(--gradient-primary)', color: 'white', border: 'none', padding: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 type="button"
               >
-                {isGenerating ? '⏳ Generating...' : '✨ Generate AI Message'}
+                <Bot size={18} />
+                {isGenerating ? 'Generating...' : 'Generate AI Message'}
               </button>
 
               {aiMessage && (
@@ -747,7 +751,7 @@ export default function EditorPage({ params }) {
         <div className={styles.workspaceHeader}>
           <div className={styles.headerLeft}>
             <Link href="/dashboard" className={styles.backBtn}>
-              ← Back
+              <ChevronLeft size={16} /> Back
             </Link>
             <h2 style={{ fontSize: '1.1rem', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
               {template?.title}
@@ -759,19 +763,22 @@ export default function EditorPage({ params }) {
               disabled={isExporting}
               className={styles.exportVideoBtn}
             >
-              {isExporting ? '⏳ Recording...' : '🎥 Export Video'}
+              <Video size={16} />
+              {isExporting ? 'Recording...' : 'Export Video'}
             </button>
             <button
               onClick={handleDownload}
               className={styles.downloadBtn}
             >
-              ⬇️ Download
+              <Download size={16} />
+              Download
             </button>
             <button
               onClick={handleShare}
               className={styles.shareBtn}
             >
-              🚀 Share Card
+              <Share2 size={16} />
+              Share Card
             </button>
           </div>
         </div>
